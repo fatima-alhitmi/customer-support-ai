@@ -13,31 +13,34 @@ function App() {
       return;
     }
 
-    const userMessage = input;
+    const userMessage = input.trim();
 
-    setMessages((previous) => [
-      ...previous,
+    const updatedMessages = [
+      ...messages,
       {
         role: "user",
         content: userMessage,
       },
-    ]);
+    ];
 
+    setMessages(updatedMessages);
     setInput("");
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8000/api/chat", {
+      const response = await fetch("http://127.0.0.1:8000/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          message: userMessage,
+          messages: updatedMessages,
         }),
       });
 
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Server error:", response.status, errorText);
         throw new Error("Server error");
       }
 
@@ -51,7 +54,7 @@ function App() {
         },
       ]);
     } catch (error) {
-      console.error(error);
+      console.error("Chat error:", error);
 
       setMessages((previous) => [
         ...previous,
@@ -89,9 +92,7 @@ function App() {
                 className={`message ${message.role}`}
               >
                 <div className="message-label">
-                  {message.role === "user"
-                    ? "You"
-                    : "Support AI"}
+                  {message.role === "user" ? "You" : "Support AI"}
                 </div>
 
                 <div className="message-content">
