@@ -80,7 +80,7 @@ function App() {
         <div className="chat-window">
           {messages.length === 0 ? (
             <div className="welcome">
-              <h2>👋 Welcome!</h2>
+              <h2> Welcome!</h2>
               <p>
                 I'm your AI customer support assistant. Ask me anything.
               </p>
